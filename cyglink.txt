@@ -1,0 +1,3 @@
+"D:\projects\silab_lcd\main.obj",
+"D:\projects\silab_lcd\lcd.obj",
+"D:\projects\silab_lcd\encoder.obj"  TO "D:\projects\silab_lcd\test" RS(256) PL(68) PW(78) 

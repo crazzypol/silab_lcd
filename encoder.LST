@@ -1,0 +1,70 @@
+C51 COMPILER V9.54   ENCODER                                                               06/11/2017 07:58:42 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE ENCODER
+OBJECT MODULE PLACED IN encoder.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\c51.exe encoder.c DB OE BR INCDIR(C:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          #include "encoder.h"
+   2          
+   3          //это для наглядности кода
+   4          #define b00000011 3
+   5          #define b11010010 210
+   6          #define b11100001 225
+   7          
+   8          volatile unsigned char bufEnc = 0; //буфер энкодера
+   9          
+  10          //функция опроса энкодера
+  11          //___________________________________________
+  12          unsigned char ENC_PollEncoder(void)
+  13          {
+  14   1      static unsigned char stateEnc;  //хранит последовательность состояний энкодера
+  15   1      unsigned char tmp;  
+  16   1      unsigned char currentState = 0;
+  17   1      
+  18   1      //проверяем состояние выводов микроконтроллера
+  19   1      if (ENC_A != 0) {currentState |= (1<<0);}
+  20   1      if (ENC_C != 0) {currentState |= (1<<1);}
+  21   1      
+  22   1      //если равно предыдущему, то выходим
+  23   1      tmp = stateEnc;
+  24   1      if (currentState == (tmp & b00000011)) return 1;
+  25   1      
+  26   1      //если не равно, то сдвигаем и сохраняем в озу
+  27   1      tmp = (tmp<<2)|currentState;
+  28   1      stateEnc = tmp;
+  29   1      
+  30   1      //сравниваем получившуюся последовательность
+  31   1      if (tmp == b11100001) bufEnc = LEFT_SPIN;
+  32   1      if (tmp == b11010010) bufEnc = RIGHT_SPIN;
+  33   1      return 0;
+  34   1      }
+  35          
+  36          //функция возвращающая значение буфера энкодера
+  37          //_____________________________________________
+  38          unsigned char ENC_GetStateEncoder(void)
+  39          {
+  40   1        unsigned char tmp = bufEnc;
+  41   1        bufEnc = 0;
+  42   1        return tmp;
+  43   1      }
+  44          
+  45          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     53    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.54   ENCODER                                                               06/11/2017 07:58:42 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

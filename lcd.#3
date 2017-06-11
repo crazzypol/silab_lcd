@@ -1,0 +1,13 @@
+#ifndef LCD
+#define LCD
+
+//extern volatile unsigned char display[32][32];  //1024 bytes
+void ResetLCD(void);
+void InitializeLCD(void);
+void Clear_LCD(void);
+void Write_Char (unsigned char, unsigned char);
+void UpdateLCD(void);
+void show_text(void);
+void _delay_us(int);
+
+#endif
